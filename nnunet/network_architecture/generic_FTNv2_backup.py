@@ -25,12 +25,11 @@ import torch.nn.functional
 class Upsample(nn.Module):
     def __init__(self, channels, out_channels,kernel_size,stride):
         super().__init__()
-        self.stride = stride
-        self.conv = nn.Conv3d(channels, out_channels,kernel_size = 3, stride = 1, padding=1)
+        self.conv = nn.ConvTranspose3d(channels, out_channels,kernel_size = kernel_size, stride = stride, bias=False)
     def forward(self, x):
-        x = torch.nn.functional.interpolate(x, (x.shape[2]*self.stride[0], x.shape[3] *self.stride[1], x.shape[4] *self.stride[2]), mode="nearest")
         x = self.conv(x)
         return x
+
 
 class Downsample(nn.Module):
     def __init__(self,  channels, out_channels,kernel_size,stride):
@@ -280,6 +279,7 @@ class Generic_FTN(SegmentationNetwork):
             norm_op_kwargs = {'eps': 1e-5, 'affine': True, 'momentum': 0.1}
         self.conv_kwargs = {'stride': 1, 'dilation': 1, 'bias': True}
 
+
         self.nonlin = nonlin
         self.nonlin_kwargs = nonlin_kwargs
         self.dropout_op_kwargs = dropout_op_kwargs
@@ -335,8 +335,7 @@ class Generic_FTN(SegmentationNetwork):
         input_features = input_channels
 
         self.seg_inputs = nn.Sequential( self.conv_op(input_features, output_features,3, 1, 1, 1, 1),
-                                          self.norm_op(num_channels = output_features, **self.norm_op_kwargs),
-                                         self.nonlin(**self.nonlin_kwargs))
+                                          self.norm_op(num_channels = output_features, **self.norm_op_kwargs))
         for d in range(num_pool):
             use_attention = True if d>=self.ATTENTION_RESOLUTION else False
 

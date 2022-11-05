@@ -22,7 +22,6 @@ from batchgenerators.utilities.file_and_folder_operations import join, isdir, sa
 from nnunet.utilities.task_name_id_conversion import convert_id_to_task_name
 from time import time
 
-
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("-i", '--input_folder', help="Must contain all modalities for each patient in the correct"

@@ -56,7 +56,11 @@ def load_pretrained_weights(network, fname, verbose=False):
             for key, _ in pretrained_dict.items():
                 print(key)
         print("################### Done ###################")
-        network.load_state_dict(model_dict)
+        network.load_state_dict(model_dict,strict=False)
     else:
         raise RuntimeError("Pretrained weights are not compatible with the current network architecture")
 
+if __name__ == '__main__':
+    state_dict = torch.load('/home/xh278/nnunet/nnUNet_trained_models/nnUNet/3d_fullres/Task667_ADPKDROUND2/nnUNetTrainerV2_Adam_FTN__nnUNetPlansv2.1/all/model_best.model')
+
+    pass
